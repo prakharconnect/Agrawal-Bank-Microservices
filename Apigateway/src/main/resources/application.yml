@@ -1,0 +1,48 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: customer-service
+          uri: lb://CUSTOMER-SERVICE
+          predicates:
+            - Path=/customer-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: accounts-service
+          uri: lb://ACCOUNTS-SERVICE
+          predicates:
+            - Path=/accounts-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment-service/**
+          filters:
+            - StripPrefix=1
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            # Frontend URL variable (Local par 5173, Cloud par aapka domain)
+            allowedOrigins: ${FRONTEND_URL:http://localhost:5173}
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+
+eureka:
+  instance:
+    # Render par hostname dynamic hona chahiye
+    hostname: ${RENDER_EXTERNAL_HOSTNAME:api-gateway}
+    prefer-ip-address: false
+  client:
+    service-url:
+      # Cloud Eureka Registry ka address
+      defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/}
