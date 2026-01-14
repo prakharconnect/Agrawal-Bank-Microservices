@@ -8,7 +8,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name="accounts-service",url = "http://localhost:8083",configuration = FeignClientConfig.class)
+@FeignClient(
+        name="ACCOUNTS-SERVICE",
+        url = "${ACCOUNTS_SERVICE_URL:http://localhost:8083}",
+        configuration = FeignClientConfig.class
+)
 public interface AccountClient {
 
     @PostMapping("/api/v1/accounts")

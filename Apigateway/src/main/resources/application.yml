@@ -31,18 +31,18 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            # Frontend URL variable (Local par 5173, Cloud par aapka domain)
-            allowedOrigins: ${FRONTEND_URL:http://localhost:5173}
+            allowedOrigins: ${FRONTEND_URL:*}
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true
 
 eureka:
   instance:
-    # Render par hostname dynamic hona chahiye
-    hostname: ${RENDER_EXTERNAL_HOSTNAME:api-gateway}
-    prefer-ip-address: false
+    # Koyeb par IP address prefer karna zyada stable rehta hai
+    prefer-ip-address: true
   client:
     service-url:
-      # Cloud Eureka Registry ka address
+      # Iska value hum Koyeb dashboard se provide karenge
       defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
