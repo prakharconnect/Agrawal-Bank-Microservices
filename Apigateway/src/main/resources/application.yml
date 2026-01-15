@@ -49,14 +49,14 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOriginPatterns: "*" # Production mein ise frontend URL se replace kar dena
+            allowedOriginPatterns: ${ALLOWED_ORIGINS:*} # Production mein ise frontend URL se replace kar dena
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true
 
 eureka:
   instance:
-    prefer-ip-address: true
+    prefer-ip-address: false
   client:
     service-url:
       # Koyeb par environment variable use karna best hai
