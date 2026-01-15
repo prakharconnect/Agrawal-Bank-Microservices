@@ -6,14 +6,30 @@ spring:
     name: API-GATEWAY
   cloud:
     gateway:
+      # 1. Discovery Locator: Ye Gateway ko Eureka se connect rehne mein help karta hai
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true # Eureka names ko handle karne ke liye
+
       routes:
+        # --- Customer Service Route ---
         - id: customer-service
           uri: lb://CUSTOMER-SERVICE
           predicates:
             - Path=/customer-service/**
           filters:
+            - StripPrefix=1 # '/customer-service' ko hata kar aage '/api/v1/customers' bhejega
+
+        # --- Auth Service Route ---
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth-service/**
+          filters:
             - StripPrefix=1
 
+        # --- Accounts Service Route ---
         - id: accounts-service
           uri: lb://ACCOUNTS-SERVICE
           predicates:
@@ -21,6 +37,7 @@ spring:
           filters:
             - StripPrefix=1
 
+        # --- Payment Service Route ---
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
@@ -28,21 +45,21 @@ spring:
           filters:
             - StripPrefix=1
 
+      # 2. CORS Configuration: Jab React use karoge tab kaam aayega
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: ${FRONTEND_URL:*}
+            allowedOrigins: "*" # Production mein ise frontend URL se replace kar dena
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true
 
 eureka:
   instance:
-    # Koyeb par IP address prefer karna zyada stable rehta hai
     prefer-ip-address: true
   client:
     service-url:
-      # Iska value hum Koyeb dashboard se provide karenge
-      defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/}
+      # Koyeb par environment variable use karna best hai
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
     register-with-eureka: true
     fetch-registry: true
