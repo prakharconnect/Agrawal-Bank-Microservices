@@ -49,7 +49,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "*" # Production mein ise frontend URL se replace kar dena
+            allowedOriginPatterns: "*" # Production mein ise frontend URL se replace kar dena
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true
