@@ -8,32 +8,36 @@ spring:
     gateway:
       discovery:
         locator:
+          # 👇 Isse auto-generated routes band ho jayenge aur confusion khatam hoga
           enabled: false
-          lower-case-service-id: true
 
       routes:
-        - id: customer-service
+        # --- Customer Service ---
+        - id: customer-service-route
           uri: lb://CUSTOMER-SERVICE
           predicates:
             - Path=/customer-service/**
           filters:
             - StripPrefix=1
 
-        - id: auth-service
+        # --- Auth Service ---
+        - id: auth-service-route
           uri: lb://AUTH-SERVICE
           predicates:
             - Path=/auth-service/**
           filters:
             - StripPrefix=1
 
-        - id: accounts-service
+        # --- Accounts Service ---
+        - id: accounts-service-route
           uri: lb://ACCOUNTS-SERVICE
           predicates:
             - Path=/accounts-service/**
           filters:
             - StripPrefix=1
 
-        - id: payment-service
+        # --- Payment Service ---
+        - id: payment-service-route
           uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/payment-service/**
@@ -43,7 +47,6 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            # Yahan direct UI ka link dena best hai browser security ke liye
             allowedOriginPatterns: "https://agrawal-bankui.vercel.app"
             allowedMethods: "*"
             allowedHeaders: "*"
@@ -58,10 +61,8 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
-# --- Sabse Zaroori: Logging (Ab Gateway bolne lagega) ---
 logging:
   level:
     org.springframework.cloud.gateway: TRACE
     org.springframework.http.server.reactive: DEBUG
     org.springframework.web.reactive: DEBUG
-    com.netflix.discovery: INFO
