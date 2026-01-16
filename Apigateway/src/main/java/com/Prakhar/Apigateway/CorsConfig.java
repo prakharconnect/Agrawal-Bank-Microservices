@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 public class CorsConfig {
 
@@ -13,6 +15,10 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
+        corsConfig.setAllowedOriginPatterns(Arrays.asList(
+                "https://agrawal-bankui.vercel.app",
+                "http://localhost:3000" // Testing ke liye
+        ));
         // 1. Sabhi Origins ko allow karo (Vercel ke liye)
         corsConfig.addAllowedOriginPattern("*");
 
