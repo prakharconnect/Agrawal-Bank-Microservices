@@ -8,29 +8,28 @@ spring:
     gateway:
       discovery:
         locator:
-          # 👇 Isse auto-generated routes band ho jayenge aur confusion khatam hoga
-          enabled: false
+          enabled: false # Auto-discovery band rakha hai stable routing ke liye
 
       routes:
-        # --- Customer Service ---
-        - id: customer-service-route
-          uri: lb://CUSTOMER-SERVICE
-          predicates:
-            - Path=/customer-service/**
-          filters:
-            - StripPrefix=1
-
         # --- Auth Service ---
         - id: auth-service-route
-          uri: lb://AUTH-SERVICE
+          uri: https://yelling-robyn-ietdavv-e7f0666f.koyeb.app
           predicates:
             - Path=/auth-service/**
           filters:
             - StripPrefix=1
 
+        # --- Customer Service ---
+        - id: customer-service-route
+          uri: https://married-reeba-ietdavv-c85073b0.koyeb.app
+          predicates:
+            - Path=/customer-service/**
+          filters:
+            - StripPrefix=1
+
         # --- Accounts Service ---
         - id: accounts-service-route
-          uri: lb://ACCOUNTS-SERVICE
+          uri: https://shiny-karilynn-mpdc-d5efad70.koyeb.app
           predicates:
             - Path=/accounts-service/**
           filters:
@@ -38,12 +37,21 @@ spring:
 
         # --- Payment Service ---
         - id: payment-service-route
-          uri: lb://PAYMENT-SERVICE
+          uri: https://entire-rozanna-mpdc-315742bb.koyeb.app
           predicates:
             - Path=/payment-service/**
           filters:
             - StripPrefix=1
 
+        # --- Notification Service ---
+        - id: notification-service-route
+          uri: https://varying-cyndie-mpdc-f3bd695f.koyeb.app
+          predicates:
+            - Path=/notification-service/**
+          filters:
+            - StripPrefix=1
+
+      # CORS Fix: OPTIONS request ko Gateway level par hi handle karne ke liye
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
@@ -54,11 +62,10 @@ spring:
             allowCredentials: true
 
 eureka:
-  instance:
-    prefer-ip-address: false
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+      # Isme humne teri Eureka Registry ki link daal di hai
+      defaultZone: https://broken-regine-ietdavv-9ba71a3f.koyeb.app/eureka/
     register-with-eureka: true
     fetch-registry: true
 
