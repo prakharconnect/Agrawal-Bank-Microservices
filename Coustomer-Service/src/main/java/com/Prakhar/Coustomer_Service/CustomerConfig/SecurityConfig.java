@@ -21,6 +21,7 @@ public class SecurityConfig {
 
                http.authorizeHttpRequests(auth -> auth
                 // 1. Customer Banana (Sign Up) sabke liye khula hai (Public)
+                               .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/customers").permitAll()
                        .anyRequest().authenticated()
 

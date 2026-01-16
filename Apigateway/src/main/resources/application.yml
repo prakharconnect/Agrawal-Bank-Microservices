@@ -6,22 +6,19 @@ spring:
     name: API-GATEWAY
   cloud:
     gateway:
-      # 1. Discovery Locator: Ye Gateway ko Eureka se connect rehne mein help karta hai
       discovery:
         locator:
           enabled: true
-          lower-case-service-id: true # Eureka names ko handle karne ke liye
+          lower-case-service-id: true
 
       routes:
-        # --- Customer Service Route ---
         - id: customer-service
           uri: lb://CUSTOMER-SERVICE
           predicates:
             - Path=/customer-service/**
           filters:
-            - StripPrefix=1 # '/customer-service' ko hata kar aage '/api/v1/customers' bhejega
+            - StripPrefix=1
 
-        # --- Auth Service Route ---
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
@@ -29,7 +26,6 @@ spring:
           filters:
             - StripPrefix=1
 
-        # --- Accounts Service Route ---
         - id: accounts-service
           uri: lb://ACCOUNTS-SERVICE
           predicates:
@@ -37,7 +33,6 @@ spring:
           filters:
             - StripPrefix=1
 
-        # --- Payment Service Route ---
         - id: payment-service
           uri: lb://PAYMENT-SERVICE
           predicates:
@@ -45,11 +40,11 @@ spring:
           filters:
             - StripPrefix=1
 
-      # 2. CORS Configuration: Jab React use karoge tab kaam aayega
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOriginPatterns: "https://agrawal-bankui.vercel.app" # Production mein ise frontend URL se replace kar dena
+            # Yahan direct UI ka link dena best hai browser security ke liye
+            allowedOriginPatterns: "https://agrawal-bankui.vercel.app"
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true
@@ -59,7 +54,14 @@ eureka:
     prefer-ip-address: false
   client:
     service-url:
-      # Koyeb par environment variable use karna best hai
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
     register-with-eureka: true
     fetch-registry: true
+
+# --- Sabse Zaroori: Logging (Ab Gateway bolne lagega) ---
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    com.netflix.discovery: INFO
